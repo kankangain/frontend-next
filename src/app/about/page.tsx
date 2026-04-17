@@ -4,10 +4,31 @@ import { SiteHeader } from "@/components/site-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const committee = [
-  { name: "Dr. A. Sen", role: "Faculty Coordinator" },
-  { name: "Riya Ghosh", role: "Student Convener" },
-  { name: "Arjun Roy", role: "Sponsorship Lead" },
-  { name: "Nandini Das", role: "Operations Lead" },
+  { name: "Institution's Innovation Council (IIC-TINT)", role: "Strategic direction and execution" },
+  { name: "Faculty Members", role: "Planning and academic support" },
+  { name: "Student Organizers", role: "On-ground delivery and operations" },
+  { name: "Industry Experts & Sponsors", role: "Expert sessions and support" },
+];
+
+const overview = [
+  "Prabuddha is the flagship annual technology festival organized by Techno International New Town (TINT), Kolkata.",
+  "The fest encourages innovation, creativity, and knowledge-sharing among students to empower future tech leaders.",
+  'It is designed as an inter-college battleground where intellect and technology converge through high-stakes competitions, hands-on workshops, and electrifying experiences.',
+  'Its core philosophy is captured by the tagline: "Compete. Create. Conquer."',
+];
+
+const activities = [
+  "Coding competitions and hackathons",
+  "Robotics challenges and live builds",
+  "Design contests and creative showcases",
+  "Workshops on AI, Machine Learning, and Robotics",
+];
+
+const history = [
+  "Prabuddha has been a recurring event at TINT for several years.",
+  'Records show that "Prabuddha - The Tech Fest at TINT" was held as early as March 27, 2019.',
+  "The 2025 edition ran from February 27th to March 1st and was recognized as a Level 4 Calendar Activity by the Institution's Innovation Council (IIC-TINT).",
+  "Prabuddha 2026 continued the annual cadence and was presented as the edition where ideas turn into reality.",
 ];
 
 export default function AboutPage() {
@@ -18,33 +39,33 @@ export default function AboutPage() {
         <SectionTitle
           badge="About Us"
           title="PRABUDDHA 2026"
-          description="A tech fest built to inspire innovation, collaboration, and problem-solving culture across campuses."
+          description="The flagship annual tech festival of TINT, Kolkata, built to showcase innovation and future technology leaders."
         />
 
         <Card>
           <CardHeader>
-            <CardTitle>Fest Overview</CardTitle>
+            <CardTitle>Overview of the Tech Fest and Its Purpose</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
-            <p>
-              PRABUDDHA is the flagship tech fest of Techno International New Town, bringing together
-              students, educators, and industry leaders for competitions, workshops, and talks.
-            </p>
-            <p>
-              The purpose of the fest is to create a practical innovation space where participants build,
-              present, and collaborate on real-world ideas.
-            </p>
+          <CardContent className="grid gap-3 text-sm text-muted-foreground md:grid-cols-2">
+            {overview.map((item) => (
+              <div key={item} className="rounded-xl border border-white/10 bg-muted/70 p-4 text-slate-200">
+                {item}
+              </div>
+            ))}
           </CardContent>
         </Card>
 
         <div className="grid gap-4 lg:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>History</CardTitle>
+              <CardTitle>History of the Fest</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <p>Started as a departmental initiative, PRABUDDHA evolved into an inter-college platform.</p>
-              <p>Each edition introduces new tracks such as AI, robotics, full-stack development, and design innovation.</p>
+              {history.map((item) => (
+                <p key={item} className="rounded-md bg-muted p-3">
+                  {item}
+                </p>
+              ))}
             </CardContent>
           </Card>
           <Card>
@@ -63,13 +84,36 @@ export default function AboutPage() {
 
         <Card>
           <CardHeader>
+            <CardTitle>Events and Learning Tracks</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-3 text-sm text-muted-foreground md:grid-cols-2">
+            {activities.map((item) => (
+              <div key={item} className="rounded-xl border border-white/10 bg-muted/70 p-4 text-slate-200">
+                {item}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Organizer Contact</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-muted-foreground">
+            <p>Inquiries for the fest can be directed to: <span className="font-semibold text-foreground">prabuddha@tint.edu.in</span></p>
+            <p>The fest is organized under the aegis of the Institution&apos;s Innovation Council (IIC) of TINT.</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
             <CardTitle>Promo Video</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="aspect-video overflow-hidden rounded-md border border-border">
               <iframe
                 title="PRABUDDHA Promo"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                src="https://www.youtube.com/shorts/95lLaJBvg-U"
                 className="h-full w-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

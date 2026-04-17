@@ -214,7 +214,23 @@ export async function submitQuery(payload: QueryInput) {
 
 export async function getFaq() {
   const response = await apiRequest<FAQItem[]>("/query/faq/all");
-  return response.data || [];
+  const payload = response.data as unknown;
+
+  if (Array.isArray(payload)) {
+    return payload;
+  }
+
+  if (payload && typeof payload === "object") {
+    const maybeFaq = (payload as { faq?: FAQItem[]; data?: FAQItem[]; items?: FAQItem[] }).faq
+      || (payload as { faq?: FAQItem[]; data?: FAQItem[]; items?: FAQItem[] }).data
+      || (payload as { faq?: FAQItem[]; data?: FAQItem[]; items?: FAQItem[] }).items;
+
+    if (Array.isArray(maybeFaq)) {
+      return maybeFaq;
+    }
+  }
+
+  return [];
 }
 
 export async function getQueries(status?: "new" | "in-progress" | "resolved") {

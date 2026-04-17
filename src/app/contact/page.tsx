@@ -15,6 +15,7 @@ import { FAQItem, getFaq, submitQuery } from "@/lib/api";
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false);
+  const [faqLoading, setFaqLoading] = useState(true);
   const [status, setStatus] = useState("");
   const [faq, setFaq] = useState<FAQItem[]>([]);
   const [form, setForm] = useState({
@@ -26,7 +27,10 @@ export default function ContactPage() {
   });
 
   useEffect(() => {
-    getFaq().then(setFaq).catch(() => setFaq([]));
+    getFaq()
+      .then(setFaq)
+      .catch(() => setFaq([]))
+      .finally(() => setFaqLoading(false));
   }, []);
 
   const onSubmit = async (e: FormEvent) => {
@@ -130,16 +134,20 @@ export default function ContactPage() {
           <CardHeader>
             <CardTitle>Frequently Asked Questions</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm">
-            {faq.length === 0 ? (
-              <p className="text-muted-foreground">FAQ will appear here when available in database.</p>
+          <CardContent className="space-y-4 text-sm">
+            {faqLoading ? (
+              <p className="text-muted-foreground">Loading FAQs from the database...</p>
+            ) : faq.length === 0 ? (
+              <p className="text-muted-foreground">No FAQs found in the database yet.</p>
             ) : (
-              faq.map((item) => (
-                <div key={item.id} className="rounded-md bg-muted p-3">
-                  <p className="font-semibold">{item.question}</p>
-                  <p className="mt-1 text-muted-foreground">{item.answer}</p>
-                </div>
-              ))
+              <div className="grid gap-3 md:grid-cols-2">
+                {faq.map((item) => (
+                  <div key={item.id} className="rounded-xl border border-white/10 bg-[linear-gradient(180deg,rgba(88,28,135,.12),rgba(31,41,55,.65))] p-4 shadow-sm">
+                    <p className="font-display text-base font-bold text-slate-100">{item.question}</p>
+                    <p className="mt-2 leading-6 text-slate-300">{item.answer}</p>
+                  </div>
+                ))}
+              </div>
             )}
           </CardContent>
         </Card>

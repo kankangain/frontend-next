@@ -1,14 +1,35 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Building2, Star, Trophy, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import GlassCountdown from "@/components/GlassCard";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
 const EVENT_TARGET_MS = Date.parse("2026-12-01T09:00:00+05:30");
+
+const overviewCards = [
+  {
+    title: "Overview of the Tech Fest and Its Purpose",
+    text: "Prabuddha is the flagship annual technology festival organized by Techno International New Town (TINT), Kolkata. It serves as a dynamic platform that encourages innovation, fosters creativity, and facilitates knowledge-sharing among students.",
+  },
+  {
+    title: "Compete. Create. Conquer.",
+    text: "The fest is designed as an inter-college battleground where intellect and technology converge through high-stakes competitions, hands-on workshops, and electrifying experiences.",
+  },
+  {
+    title: "Events and Learning Tracks",
+    text: "Events span coding competitions, hackathons, robotics challenges, design contests, and workshops on AI, Machine Learning, and Robotics.",
+  },
+  {
+    title: "History of the Fest",
+    text: "Prabuddha has grown from earlier editions at TINT, with records showing the fest as early as 2019 and the 2025 edition recognized by IIC-TINT as a Level 4 Calendar Activity.",
+  },
+];
 
 export default function HomePage() {
   return (
@@ -27,8 +48,37 @@ export default function HomePage() {
         <div className="absolute -right-10 bottom-24 h-56 w-56 rounded-full bg-slate-300/15 blur-3xl animate-ember-float [animation-delay:1.1s]" />
 
         <section className="relative z-10 mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-7xl flex-col items-center justify-center px-4 pb-16 pt-10 text-center sm:px-6">
-          <div className="animate-rise-in rounded-full border border-slate-300/35 bg-black/35 px-6 py-2 text-xs font-black uppercase tracking-[0.14em] text-slate-300 shadow-[0_0_0_2px_rgba(156,163,175,.25)] sm:text-sm">
-            30-Hour India&apos;s Premier Software + Hardware Hackathon
+          <div className="relative mb-10 w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/12 bg-[rgba(10,13,32,.35)] shadow-[0_18px_60px_rgba(0,0,0,.28)] backdrop-blur-sm">
+            <div className="relative aspect-[16/6] w-full">
+              <Image
+                src="/3s7wg.jpg.jpeg"
+                alt="PRABUDDHA festival banner"
+                fill
+                priority
+                className="object-cover object-center opacity-90"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(14,18,38,.85),rgba(88,28,135,.18),rgba(14,18,38,.6))]" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(192,132,252,.24),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(96,165,250,.18),transparent_28%)]" />
+
+              <div className="absolute left-5 top-5 rounded-full border border-white/15 bg-black/30 px-4 py-1 text-xs font-bold uppercase tracking-[0.2em] text-slate-100 backdrop-blur-md sm:left-8 sm:top-8">
+                PRABUDDHA 2026
+              </div>
+
+              <div className="absolute right-4 top-4 hidden h-28 w-28 overflow-hidden rounded-2xl border border-white/15 bg-black/20 shadow-[0_12px_30px_rgba(0,0,0,.25)] sm:right-8 sm:top-8 sm:block sm:h-36 sm:w-36">
+                <Image
+                  src="/Gemini_Generated_Image_pxj3p0pxj3p0pxj3 (1).png"
+                  alt="PRABUDDHA accent artwork"
+                  fill
+                  className="object-cover object-center"
+                />
+              </div>
+
+              <div className="absolute inset-x-0 bottom-0 p-6 text-left sm:p-8">
+                <p className="max-w-xl text-sm text-slate-200/90 sm:text-base">
+                  Techno International New Town&apos;s flagship annual technology festival where competition, creativity, and innovation collide.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="mt-6 animate-rise-in [animation-delay:.15s]">
@@ -84,6 +134,22 @@ export default function HomePage() {
                 <p className="font-display text-4xl font-black text-sky-400 sm:text-5xl">100+</p>
                 <p className="mt-4 text-sm text-slate-200/85 sm:text-base">Colleges Participating</p>
               </div>
+            </div>
+          </div>
+
+          <div className="mt-14 w-full max-w-6xl space-y-6 text-left">
+            <p className="text-sm uppercase tracking-[0.22em] text-slate-300/80">About Prabuddha</p>
+            <div className="grid gap-4 lg:grid-cols-2">
+              {overviewCards.map((card) => (
+                <Card key={card.title} className="border-white/12 bg-[linear-gradient(180deg,rgba(17,20,44,.52),rgba(17,20,44,.28))] text-slate-100 shadow-[0_14px_40px_rgba(0,0,0,.16)] backdrop-blur-md">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-slate-50">{card.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm leading-6 text-slate-300">
+                    {card.text}
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
