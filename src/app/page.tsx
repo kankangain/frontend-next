@@ -64,15 +64,6 @@ export default function HomePage() {
                 PRABUDDHA 2026
               </div>
 
-              <div className="absolute right-4 top-4 hidden h-28 w-28 overflow-hidden rounded-2xl border border-white/15 bg-black/20 shadow-[0_12px_30px_rgba(0,0,0,.25)] sm:right-8 sm:top-8 sm:block sm:h-36 sm:w-36">
-                <Image
-                  src="/Gemini_Generated_Image_pxj3p0pxj3p0pxj3 (1).png"
-                  alt="PRABUDDHA accent artwork"
-                  fill
-                  className="object-cover object-center"
-                />
-              </div>
-
               <div className="absolute inset-x-0 bottom-0 p-6 text-left sm:p-8">
                 <p className="max-w-xl text-sm text-slate-200/90 sm:text-base">
                   Techno International New Town&apos;s flagship annual technology festival where competition, creativity, and innovation collide.
