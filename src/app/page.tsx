@@ -86,7 +86,7 @@ export default function HomePage() {
           </p>
 
           <p className="mt-2 animate-rise-in max-w-2xl text-sm text-slate-200/90 [animation-delay:.35s] sm:text-lg">
-            Clash with codes, conquer with vision, and forge your legend at PRABUDDHA 2026.
+            PRABUDDHA is the annual techno-cultural fest of Techno International New Town, where innovation meets creativity. It brings together passionate students, developers, and tech enthusiasts to explore cutting-edge domains like AI, cybersecurity, robotics, and more.
           </p>
 
           <div className="mt-5 inline-flex animate-rise-in items-center gap-2 rounded-full border border-[#9ca3af]/35 bg-[#9ca3af]/10 px-4 py-2 text-sm font-bold text-[#e5e7eb] [animation-delay:.45s]">
