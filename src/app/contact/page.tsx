@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FAQItem, getFaq, submitQuery } from "@/lib/api";
+import { contactFormSchema, getZodErrorMessage } from "@/lib/validation";
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false);
@@ -35,10 +36,17 @@ export default function ContactPage() {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const parsed = contactFormSchema.safeParse(form);
+    if (!parsed.success) {
+      setStatus(getZodErrorMessage(parsed.error));
+      return;
+    }
+
     try {
       setLoading(true);
       setStatus("");
-      await submitQuery(form);
+      await submitQuery(parsed.data);
       setStatus("Your query has been submitted successfully.");
       setForm({ name: "", email: "", phone: "", subject: "", message: "" });
     } catch (err) {

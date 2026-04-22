@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EventItem, UserRole, createUser, getEvents, registerForEvent, uploadIdCard } from "@/lib/api";
+import { getZodErrorMessage, registerFormSchema, validateIdCardFile } from "@/lib/validation";
 
 export default function RegisterPage() {
   const [events, setEvents] = useState<EventItem[]>([]);
@@ -33,8 +34,16 @@ export default function RegisterPage() {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!form.eventId) {
-      setStatus("Please select an event.");
+
+    const parsed = registerFormSchema.safeParse(form);
+    if (!parsed.success) {
+      setStatus(getZodErrorMessage(parsed.error));
+      return;
+    }
+
+    const fileValidationError = validateIdCardFile(idCardFile);
+    if (fileValidationError) {
+      setStatus(fileValidationError);
       return;
     }
 
@@ -48,16 +57,16 @@ export default function RegisterPage() {
       }
 
       const user = await createUser({
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
-        college: form.college,
-        year: form.year,
-        password: form.password,
-        role: form.role,
+        name: parsed.data.name,
+        email: parsed.data.email,
+        phone: parsed.data.phone,
+        college: parsed.data.college,
+        year: parsed.data.year,
+        password: parsed.data.password,
+        role: parsed.data.role as UserRole,
         id_card_url: idCardUrl || undefined,
       });
-      await registerForEvent(user.id, Number(form.eventId));
+      await registerForEvent(user.id, Number(parsed.data.eventId));
       setStatus("Registration submitted successfully. Check your email for confirmation.");
       setForm({ name: "", email: "", phone: "", college: "", year: "", password: "", role: "participant", eventId: "" });
       setIdCardFile(null);

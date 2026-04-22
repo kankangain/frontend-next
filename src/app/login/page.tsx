@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { userLogin } from "@/lib/api";
+import { getZodErrorMessage, userLoginFormSchema } from "@/lib/validation";
 
 export default function UserLoginPage() {
   const [email, setEmail] = useState("");
@@ -19,10 +20,17 @@ export default function UserLoginPage() {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const parsed = userLoginFormSchema.safeParse({ email, password });
+    if (!parsed.success) {
+      setStatus(getZodErrorMessage(parsed.error));
+      return;
+    }
+
     try {
       setLoading(true);
       setStatus("");
-      const data = await userLogin(email, password);
+      const data = await userLogin(parsed.data.email, parsed.data.password);
       if (!data) {
         throw new Error("Unable to login.");
       }

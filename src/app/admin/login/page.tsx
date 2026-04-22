@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { adminLogin } from "@/lib/api";
+import { adminLoginFormSchema, getZodErrorMessage } from "@/lib/validation";
 
 const TOKEN_KEY = "admin_token";
 
@@ -23,10 +24,17 @@ export default function AdminLoginPage() {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const parsed = adminLoginFormSchema.safeParse({ username, password });
+    if (!parsed.success) {
+      setError(getZodErrorMessage(parsed.error));
+      return;
+    }
+
     try {
       setLoading(true);
       setError("");
-      const response = await adminLogin(username, password);
+      const response = await adminLogin(parsed.data.username, parsed.data.password);
       localStorage.setItem(TOKEN_KEY, response.token);
       router.push("/admin/dashboard");
     } catch (err) {
