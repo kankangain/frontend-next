@@ -59,6 +59,21 @@ export type EventItem = {
   image_url?: string;
 };
 
+export type EventCreateInput = {
+  title: string;
+  category: string;
+  description: string;
+  rules?: string;
+  eligibility?: string;
+  prize_details?: string;
+  date: string;
+  time: string;
+  venue?: string;
+  max_participants?: number;
+  registration_fee?: number;
+  image_url?: string;
+};
+
 export type UserRole = "participant" | "organizer" | "volunteer" | "faculty" | "admin";
 
 export type UserInput = {
@@ -158,6 +173,32 @@ export async function getEvents(params?: {
 export async function getCategories() {
   const response = await apiRequest<string[]>("/events/list/categories");
   return response.data || [];
+}
+
+export async function createEvent(payload: EventCreateInput) {
+  const normalizedPayload = {
+    ...payload,
+    rules: payload.rules || null,
+    eligibility: payload.eligibility || null,
+    prize_details: payload.prize_details || null,
+    venue: payload.venue || null,
+    max_participants:
+      typeof payload.max_participants === "number" && Number.isFinite(payload.max_participants)
+        ? payload.max_participants
+        : null,
+    registration_fee:
+      typeof payload.registration_fee === "number" && Number.isFinite(payload.registration_fee)
+        ? payload.registration_fee
+        : 0,
+    image_url: payload.image_url || null,
+  };
+
+  const response = await apiRequest<{ eventId?: number } & Record<string, unknown>>("/events/create", {
+    method: "POST",
+    body: normalizedPayload,
+  });
+
+  return { id: Number((response.eventId || 0) as number) };
 }
 
 export async function uploadIdCard(file: File) {

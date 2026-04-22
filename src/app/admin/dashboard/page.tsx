@@ -1,5 +1,6 @@
 "use client";
 
+import { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,8 +11,10 @@ import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   AdminStats,
+  createEvent,
   QueryRow,
   getAdminRecent,
   getAdminRegistrations,
@@ -33,6 +36,22 @@ export default function AdminDashboardPage() {
   const [queries, setQueries] = useState<QueryRow[]>([]);
   const [queryFilter, setQueryFilter] = useState<"new" | "in-progress" | "resolved" | "">("");
   const [responseById, setResponseById] = useState<Record<number, string>>({});
+  const [eventForm, setEventForm] = useState({
+    title: "",
+    category: "",
+    description: "",
+    rules: "",
+    eligibility: "",
+    prize_details: "",
+    date: "",
+    time: "",
+    venue: "",
+    max_participants: "",
+    registration_fee: "",
+    image_url: "",
+  });
+  const [eventStatus, setEventStatus] = useState("");
+  const [eventSubmitting, setEventSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -82,6 +101,59 @@ export default function AdminDashboardPage() {
       setQueries(updated);
     } catch (err) {
       setError((err as Error).message);
+    }
+  };
+
+  const handleCreateEvent = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!eventForm.title || !eventForm.category || !eventForm.description || !eventForm.date || !eventForm.time) {
+      setEventStatus("Please fill title, category, description, date, and time.");
+      return;
+    }
+
+    try {
+      setEventSubmitting(true);
+      setEventStatus("");
+      const created = await createEvent({
+        title: eventForm.title.trim(),
+        category: eventForm.category.trim(),
+        description: eventForm.description.trim(),
+        rules: eventForm.rules.trim() || undefined,
+        eligibility: eventForm.eligibility.trim() || undefined,
+        prize_details: eventForm.prize_details.trim() || undefined,
+        date: eventForm.date,
+        time: eventForm.time,
+        venue: eventForm.venue.trim() || undefined,
+        max_participants: eventForm.max_participants ? Number(eventForm.max_participants) : undefined,
+        registration_fee: eventForm.registration_fee ? Number(eventForm.registration_fee) : undefined,
+        image_url: eventForm.image_url.trim() || undefined,
+      });
+
+      setEventForm({
+        title: "",
+        category: "",
+        description: "",
+        rules: "",
+        eligibility: "",
+        prize_details: "",
+        date: "",
+        time: "",
+        venue: "",
+        max_participants: "",
+        registration_fee: "",
+        image_url: "",
+      });
+      setEventStatus(`Event created successfully (ID: ${created.id}).`);
+
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (token) {
+        const statsData = await getAdminStats(token);
+        setStats(statsData);
+      }
+    } catch (err) {
+      setEventStatus((err as Error).message);
+    } finally {
+      setEventSubmitting(false);
     }
   };
 
@@ -154,6 +226,99 @@ export default function AdminDashboardPage() {
             </CardContent>
           </Card>
         </section>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Create Event</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleCreateEvent} className="grid gap-3 sm:grid-cols-2">
+              <Input
+                placeholder="Event title"
+                value={eventForm.title}
+                onChange={(e) => setEventForm((prev) => ({ ...prev, title: e.target.value }))}
+                required
+              />
+              <Input
+                placeholder="Category"
+                value={eventForm.category}
+                onChange={(e) => setEventForm((prev) => ({ ...prev, category: e.target.value }))}
+                required
+              />
+              <div className="sm:col-span-2">
+                <Textarea
+                  placeholder="Description"
+                  value={eventForm.description}
+                  onChange={(e) => setEventForm((prev) => ({ ...prev, description: e.target.value }))}
+                  required
+                />
+              </div>
+              <Input
+                type="date"
+                value={eventForm.date}
+                onChange={(e) => setEventForm((prev) => ({ ...prev, date: e.target.value }))}
+                required
+              />
+              <Input
+                type="time"
+                value={eventForm.time}
+                onChange={(e) => setEventForm((prev) => ({ ...prev, time: e.target.value }))}
+                required
+              />
+              <Input
+                placeholder="Venue"
+                value={eventForm.venue}
+                onChange={(e) => setEventForm((prev) => ({ ...prev, venue: e.target.value }))}
+              />
+              <Input
+                placeholder="Max participants"
+                type="number"
+                min={1}
+                value={eventForm.max_participants}
+                onChange={(e) => setEventForm((prev) => ({ ...prev, max_participants: e.target.value }))}
+              />
+              <Input
+                placeholder="Registration fee"
+                type="number"
+                min={0}
+                step="0.01"
+                value={eventForm.registration_fee}
+                onChange={(e) => setEventForm((prev) => ({ ...prev, registration_fee: e.target.value }))}
+              />
+              <Input
+                placeholder="Banner image URL"
+                value={eventForm.image_url}
+                onChange={(e) => setEventForm((prev) => ({ ...prev, image_url: e.target.value }))}
+              />
+              <Input
+                placeholder="Eligibility (optional)"
+                value={eventForm.eligibility}
+                onChange={(e) => setEventForm((prev) => ({ ...prev, eligibility: e.target.value }))}
+              />
+              <div className="sm:col-span-2">
+                <Textarea
+                  placeholder="Rules (optional)"
+                  value={eventForm.rules}
+                  onChange={(e) => setEventForm((prev) => ({ ...prev, rules: e.target.value }))}
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <Textarea
+                  placeholder="Prize details (optional)"
+                  value={eventForm.prize_details}
+                  onChange={(e) => setEventForm((prev) => ({ ...prev, prize_details: e.target.value }))}
+                />
+              </div>
+
+              <div className="sm:col-span-2 flex items-center gap-3">
+                <Button type="submit" disabled={eventSubmitting}>
+                  {eventSubmitting ? "Creating..." : "Create Event"}
+                </Button>
+                {eventStatus ? <p className="text-sm text-muted-foreground">{eventStatus}</p> : null}
+              </div>
+            </form>
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader>
