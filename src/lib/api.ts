@@ -18,7 +18,10 @@ type ApiResponse<T> = {
   [key: string]: unknown;
 };
 
-async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<ApiResponse<T>> {
+async function apiRequest<T>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<ApiResponse<T>> {
   const { method = "GET", body, token, isFormData = false } = options;
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
@@ -74,7 +77,12 @@ export type EventCreateInput = {
   image_url?: string;
 };
 
-export type UserRole = "participant" | "organizer" | "volunteer" | "faculty" | "admin";
+export type UserRole =
+  | "participant"
+  | "organizer"
+  | "volunteer"
+  | "faculty"
+  | "admin";
 
 export type UserInput = {
   name: string;
@@ -183,17 +191,21 @@ export async function createEvent(payload: EventCreateInput) {
     prize_details: payload.prize_details || null,
     venue: payload.venue || null,
     max_participants:
-      typeof payload.max_participants === "number" && Number.isFinite(payload.max_participants)
+      typeof payload.max_participants === "number" &&
+      Number.isFinite(payload.max_participants)
         ? payload.max_participants
         : null,
     registration_fee:
-      typeof payload.registration_fee === "number" && Number.isFinite(payload.registration_fee)
+      typeof payload.registration_fee === "number" &&
+      Number.isFinite(payload.registration_fee)
         ? payload.registration_fee
         : 0,
     image_url: payload.image_url || null,
   };
 
-  const response = await apiRequest<{ eventId?: number } & Record<string, unknown>>("/events/create", {
+  const response = await apiRequest<
+    { eventId?: number } & Record<string, unknown>
+  >("/events/create", {
     method: "POST",
     body: normalizedPayload,
   });
@@ -213,39 +225,44 @@ export async function uploadIdCard(file: File) {
 }
 
 export async function createUser(payload: UserInput) {
-  const response = await apiRequest<{ userId?: number } & Record<string, unknown>>("/users", {
+  const response = await apiRequest<
+    { userId?: number } & Record<string, unknown>
+  >("/users", {
     method: "POST",
     body: payload,
   });
-  const userId = Number((response.userId || response.data?.userId || 0) as number);
+  const userId = Number(
+    (response.userId || response.data?.userId || 0) as number,
+  );
   return { id: userId };
 }
 
 export async function userLogin(email: string, password: string) {
-  const response = await apiRequest<{ token: string; user: { role: string; name: string } }>(
-    "/auth/login",
-    {
-      method: "POST",
-      body: { email, password },
-    },
-  );
+  const response = await apiRequest<{
+    token: string;
+    user: { role: string; name: string };
+  }>("/auth/login", {
+    method: "POST",
+    body: { email, password },
+  });
   return response.data;
 }
 
 export async function registerForEvent(user_id: number, event_id: number) {
-  const response = await apiRequest<{ registrationId?: number } & Record<string, unknown>>(
-    "/reg/user",
-    {
-      method: "POST",
-      body: { user_id, event_id },
-    },
-  );
+  const response = await apiRequest<
+    { registrationId?: number } & Record<string, unknown>
+  >("/reg/user", {
+    method: "POST",
+    body: { user_id, event_id },
+  });
   const id = Number((response.registrationId || 0) as number);
   return { id };
 }
 
 export async function submitQuery(payload: QueryInput) {
-  const response = await apiRequest<{ queryId?: number } & Record<string, unknown>>("/query", {
+  const response = await apiRequest<
+    { queryId?: number } & Record<string, unknown>
+  >("/query", {
     method: "POST",
     body: payload,
   });
@@ -262,9 +279,13 @@ export async function getFaq() {
   }
 
   if (payload && typeof payload === "object") {
-    const maybeFaq = (payload as { faq?: FAQItem[]; data?: FAQItem[]; items?: FAQItem[] }).faq
-      || (payload as { faq?: FAQItem[]; data?: FAQItem[]; items?: FAQItem[] }).data
-      || (payload as { faq?: FAQItem[]; data?: FAQItem[]; items?: FAQItem[] }).items;
+    const maybeFaq =
+      (payload as { faq?: FAQItem[]; data?: FAQItem[]; items?: FAQItem[] })
+        .faq ||
+      (payload as { faq?: FAQItem[]; data?: FAQItem[]; items?: FAQItem[] })
+        .data ||
+      (payload as { faq?: FAQItem[]; data?: FAQItem[]; items?: FAQItem[] })
+        .items;
 
     if (Array.isArray(maybeFaq)) {
       return maybeFaq;
@@ -287,7 +308,10 @@ export async function respondToQuery(id: number, admin_response: string) {
   });
 }
 
-export async function updateQueryStatus(id: number, status: "new" | "in-progress" | "resolved") {
+export async function updateQueryStatus(
+  id: number,
+  status: "new" | "in-progress" | "resolved",
+) {
   await apiRequest(`/query/${id}/status`, {
     method: "PUT",
     body: { status },
@@ -295,9 +319,9 @@ export async function updateQueryStatus(id: number, status: "new" | "in-progress
 }
 
 export async function getUserRegistrations(userId: number) {
-  const response = await apiRequest<Array<{ id: number; title: string; status: string }>>(
-    `/reg/user/${userId}`,
-  );
+  const response = await apiRequest<
+    Array<{ id: number; title: string; status: string }>
+  >(`/reg/user/${userId}`);
   return response.data || [];
 }
 
@@ -310,7 +334,9 @@ export async function adminLogin(username: string, password: string) {
 }
 
 export async function getAdminStats(token: string) {
-  const response = await apiRequest<AdminStats>("/admin/dashboard/stats", { token });
+  const response = await apiRequest<AdminStats>("/admin/dashboard/stats", {
+    token,
+  });
   return response.data as AdminStats;
 }
 
@@ -329,6 +355,9 @@ export async function getAdminRecent(token: string) {
 }
 
 export async function getAdminRegistrations(token: string) {
-  const response = await apiRequest<RegistrationRow[]>("/admin/registrations/all", { token });
+  const response = await apiRequest<RegistrationRow[]>(
+    "/admin/registrations/all",
+    { token },
+  );
   return response.data || [];
 }

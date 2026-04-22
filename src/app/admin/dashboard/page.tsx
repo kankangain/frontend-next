@@ -1,12 +1,11 @@
 "use client";
 
-import { FormEvent } from "react";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
 
-import { SiteFooter } from "@/components/site-footer";
 import { SectionTitle } from "@/components/section-title";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,11 +14,11 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   AdminStats,
   createEvent,
-  QueryRow,
   getAdminRecent,
   getAdminRegistrations,
   getAdminStats,
   getQueries,
+  QueryRow,
   RecentDashboardData,
   RegistrationRow,
   respondToQuery,
