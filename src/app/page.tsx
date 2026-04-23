@@ -1,14 +1,14 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
 import { Building2, Star, Trophy, Users } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import GlassCountdown from "@/components/GlassCard";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const EVENT_TARGET_MS = Date.parse("2026-12-01T09:00:00+05:30");
 
